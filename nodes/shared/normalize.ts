@@ -133,12 +133,19 @@ function extractLink(content: IDataObject): string {
 	return str(content.matchedText) || textUrl;
 }
 
-/** The conversation peer: the customer, also on messages we sent. */
-function conversationNumber(msg: IDataObject): string {
+const PHONE_JID = '@s.whatsapp.net';
+
+/**
+ * The conversation peer: the customer, also on messages we sent. In a LID chat on a message we sent,
+ * `sender_lid` is the owner's own LID, so the customer comes from `chat.wa_chatid` or the chat id itself.
+ */
+function conversationNumber(msg: IDataObject, body: IDataObject): string {
 	const chatid = str(msg.chatid);
-	if (chatid.endsWith('@s.whatsapp.net')) return beforeAt(chatid);
+	if (chatid.endsWith(PHONE_JID)) return beforeAt(chatid);
+	const waChatid = str(obj(body.chat).wa_chatid);
+	if (waChatid.endsWith(PHONE_JID)) return beforeAt(waChatid);
 	if (!msg.fromMe && str(msg.sender_pn)) return beforeAt(msg.sender_pn);
-	return str(msg.sender_lid);
+	return chatid;
 }
 
 function messageRole(msg: IDataObject): string {
@@ -158,7 +165,7 @@ export function normalizeMessage(body: IDataObject): NormalizedMessage {
 	const chatid = str(msg.chatid);
 	const isGroup = chatid.includes('@g.');
 	const mimetype = str(content.mimetype);
-	const number = conversationNumber(msg);
+	const number = conversationNumber(msg, body);
 
 	return {
 		message: {

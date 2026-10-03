@@ -72,6 +72,26 @@ describe('normalizeMessage — roles and numbers', () => {
 	});
 });
 
+describe('normalizeMessage — LID chats', () => {
+	const lidChat = { chatid: '275582348714164@lid' };
+	const withChat = (message: IDataObject, chat: IDataObject): IDataObject => ({ ...body(message), chat });
+
+	it('outbound in a LID chat takes the customer number from chat.wa_chatid', () => {
+		const out = normalizeMessage(withChat({ ...lidChat, fromMe: true, sender_pn: '551151965511@s.whatsapp.net', sender_lid: '999@lid', messageType: 'Conversation', text: 'oi' }, { wa_chatid: '5511994989615@s.whatsapp.net' }));
+		expect(out.message).toMatchObject({ whatsapp: '5511994989615', sender: '5511994989615' });
+	});
+
+	it('outbound in a LID chat without chat keeps the conversation LID, never the owner LID', () => {
+		const out = normalizeMessage(body({ ...lidChat, fromMe: true, sender_pn: '551151965511@s.whatsapp.net', sender_lid: '999@lid', messageType: 'Conversation', text: 'oi' }));
+		expect(out.message).toMatchObject({ whatsapp: '275582348714164@lid', sender: '275582348714164@lid' });
+	});
+
+	it('outbound in a group keeps the group chatid', () => {
+		const out = normalizeMessage(withChat({ chatid: '120363000000000000@g.us', isGroup: true, fromMe: true, messageType: 'Conversation', text: 'oi' }, { wa_chatid: '120363000000000000@g.us' }));
+		expect(out.message.whatsapp).toBe('120363000000000000@g.us');
+	});
+});
+
 describe('normalizeMessage — content', () => {
 	it('conversation keeps line breaks', () => {
 		expect(normalizeMessage(body({ messageType: 'Conversation', text: 'linha 1\nlinha 2\n' })).message.content).toBe('linha 1\nlinha 2');

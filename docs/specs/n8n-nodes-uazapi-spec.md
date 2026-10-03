@@ -97,7 +97,6 @@ Arquivo binário: se o usuário escolher "Propriedade binária", o node converte
 |---|---|---|
 | Status | `GET /instance/status` | — |
 | Conectar | `POST /instance/connect` | opções: Telefone (gera código de pareamento em vez de QR) |
-| Desconectar | `POST /instance/disconnect` | — |
 
 Saída = JSON da uazapi como veio. Conectar devolve QR code/código de pareamento no JSON.
 
@@ -139,7 +138,7 @@ Mantém os nomes do Set `normalizacao` atual. Fonte = `body.message` (`msg`), `c
 | `message.message_id` | `msg.messageid` |
 | `message.chat_id` / `message.jid` | `msg.chatid` |
 | `message.pushName` | `msg.senderName` |
-| `message.whatsapp` / `message.sender` | número do `chatid` quando termina em `@s.whatsapp.net` (o cliente, também em mensagens `fromMe`); senão, se `!fromMe`, número de `msg.sender_pn`; senão `msg.sender_lid` |
+| `message.whatsapp` / `message.sender` | o cliente (também em mensagens `fromMe`), na ordem: número do `msg.chatid` se termina em `@s.whatsapp.net`; senão número de `body.chat.wa_chatid` se termina em `@s.whatsapp.net`; senão, se `!fromMe`, número de `msg.sender_pn`; senão o `msg.chatid` inteiro (LID da conversa). Nunca `sender_lid`: em `fromMe` ele é o LID do dono |
 | `message.lid` | `msg.sender_lid` |
 | `message.origem` | `grupo` se `chatid` contém `@g.`, senão `individual` |
 | `message.content_type` | `msg.messageType` em minúsculas |
