@@ -1,0 +1,40 @@
+# Gates a cada push e PR. Sem segredo nenhum: teste que tentar a API real falha
+# por falta de credencial em vez de enviar mensagem.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ponteiros e números nos documentos
+        run: node scripts/check-agent-pointers.mjs && node scripts/check-docs.mjs
+
+      # Os passos abaixo só existem depois do scaffold (T1); antes disso, pulam.
+      - uses: actions/setup-node@v4
+        if: hashFiles('package-lock.json') != ''
+        with:
+          node-version: '22'
+          cache: npm
+      - if: hashFiles('package-lock.json') != ''
+        run: npm ci
+      - name: build
+        if: hashFiles('package-lock.json') != ''
+        run: npm run build
+      - name: lint (regras de community node)
+        if: hashFiles('package-lock.json') != ''
+        run: npm run lint
+      - name: testes
+        if: hashFiles('package-lock.json') != ''
+        run: npm test
