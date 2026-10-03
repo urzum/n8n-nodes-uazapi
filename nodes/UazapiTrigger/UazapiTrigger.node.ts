@@ -1,5 +1,4 @@
 import type {
-	IDataObject,
 	IHookFunctions,
 	INodeType,
 	INodeTypeDescription,
@@ -11,6 +10,8 @@ import { instanceLocator, searchInstances } from '../shared/instanceLocator';
 import { normalizeMessage } from '../shared/normalize';
 import type { InstanceLocator } from '../shared/transport';
 import { resolveInstanceToken, statusOf, toNodeError, uazapiRequest } from '../shared/transport';
+import type { MediaMode } from './media';
+import { applyDownload, downloadPayload, hasMedia } from './media';
 import {
 	addWebhookBody,
 	deleteWebhookBody,
@@ -101,6 +102,27 @@ export class UazapiTrigger implements INodeType {
 					{ name: 'Raw', value: 'raw', description: 'The webhook body exactly as uazapi sent it' },
 				],
 			},
+			{
+				displayName: 'Media',
+				name: 'media',
+				type: 'options',
+				default: 'none',
+				description: 'Download received media through uazapi. The URL inside the webhook is encrypted and cannot be opened.',
+				displayOptions: { show: { output: ['normalized'] } },
+				options: [
+					{ name: 'Do Not Download', value: 'none' },
+					{ name: 'Link', value: 'link', description: 'Public link valid for 2 days in attachment.file_url' },
+					{ name: 'Link and Base64', value: 'linkBase64', description: 'Also fills attachment.base64 (heavier)' },
+				],
+			},
+			{
+				displayName: 'Transcribe Audio',
+				name: 'transcribeAudio',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to put the audio transcription in message.content (uses the OpenAI key saved on the instance)',
+				displayOptions: { show: { output: ['normalized'], media: ['link', 'linkBase64'] } },
+			},
 		],
 	};
 
@@ -166,7 +188,23 @@ export class UazapiTrigger implements INodeType {
 		const output = this.getNodeParameter('output', 'normalized') as string;
 		if (output === 'raw' || body.EventType !== 'messages') return { workflowData: [[{ json: body }]] };
 
-		const item: IDataObject = normalizeMessage(body);
+		const item = normalizeMessage(body);
+		const media = this.getNodeParameter('media', 'none') as MediaMode;
+		if (media !== 'none' && hasMedia(body)) {
+			const transcribe = this.getNodeParameter('transcribeAudio', false) as boolean;
+			const messageId = String(item.message.message_id);
+			try {
+				const response = await uazapiRequest(
+					this,
+					{ method: 'POST', path: '/message/download', body: downloadPayload(messageId, media, transcribe) },
+					token,
+				);
+				applyDownload(item, response, transcribe);
+			} catch (error) {
+				item.attachment.download_error = (error as Error).message;
+				this.logger.warn(`Uazapi Trigger: media download failed for message ${messageId}: ${(error as Error).message}`);
+			}
+		}
 		return { workflowData: [[{ json: item }]] };
 	}
 }
