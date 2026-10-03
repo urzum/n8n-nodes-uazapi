@@ -36,7 +36,7 @@
 		"credentials": [
 			"dist/credentials/UazapiApi.credentials.js"
 		],
-		"nodes": []
+		"nodes": ["dist/nodes/Uazapi/Uazapi.node.js"]
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "*",
