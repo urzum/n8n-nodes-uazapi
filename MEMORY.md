@@ -8,11 +8,11 @@ Spec aprovada (`docs/specs/n8n-nodes-uazapi-spec.md`). Estrutura de agentes mont
 
 ## Em andamento
 
-Plano escrito, aguardando aprovação do Armando: `docs/specs/n8n-nodes-uazapi-plan.md`.
+Plano aprovado (2026-10-03, modo Native). Implementação com a sessão dev `plugin-uazapi-c4`; revisão final na sessão de planejamento. Issues #3 a #9.
 
 ## Próximo passo seguro
 
-Após aprovação: `node scripts/tasks-to-issues.mjs` e começar pela T1.
+T1 (#3) em diante, na ordem do plano.
 
 ## Bloqueios
 
