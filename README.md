@@ -22,7 +22,7 @@ O teste da credencial chama `GET /instance/all` (com Admin Token) ou `GET /statu
 | Resource | Operações |
 |---|---|
 | Message | Send Text, Send Media, Send Contact, Send Location, Send Menu, React, Mark as Read, Send Presence |
-| Instance | Get Status, Connect, Disconnect |
+| Instance | Get Status, Connect |
 
 **Instância:** `From List` (precisa do Admin Token; o token é buscado uma vez por execução) ou `By Token`.
 Para responder pelo mesmo número que recebeu a mensagem, use no `By Token`: `{{ $json.instance.token }}`.

@@ -57,7 +57,6 @@ describe('Uazapi node — Send Text', () => {
 describe('Uazapi node — Instance', () => {
 	it.each([
 		['getStatus', 'GET', '/instance/status', undefined],
-		['disconnect', 'POST', '/instance/disconnect', undefined],
 		['connect', 'POST', '/instance/connect', { phone: '5511999999999' }],
 	])('%s calls %s %s', async (operation, method, path, body) => {
 		const { ctx, calls } = fakeExecute({
@@ -68,5 +67,21 @@ describe('Uazapi node — Instance', () => {
 		expect(calls[0].method).toBe(method);
 		expect(calls[0].url).toBe(`https://x.uazapi.com${path}`);
 		expect(calls[0].body).toEqual(body);
+	});
+});
+
+describe('Uazapi node — Instance is not destructive', () => {
+	it('does not offer Disconnect (AI Agent could log the number out)', async () => {
+		const { Uazapi } = await import('../nodes/Uazapi/Uazapi.node');
+		const operation = new Uazapi().description.properties.find((p) => p.name === 'operation' && p.displayOptions?.show?.resource?.includes('instance'));
+		expect((operation?.options as { value: string }[]).map((o) => o.value)).toEqual(['connect', 'getStatus']);
+	});
+
+	it('rejects a leftover disconnect operation', async () => {
+		const { ctx, calls } = fakeExecute({
+			params: { resource: 'instance', operation: 'disconnect', instance: { mode: 'manual', value: 'T' } },
+		});
+		await expect(run(ctx)).rejects.toThrow(/Unsupported instance operation/);
+		expect(calls).toHaveLength(0);
 	});
 });

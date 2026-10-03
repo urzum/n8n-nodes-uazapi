@@ -31,3 +31,9 @@ booleano, para quem quiser outros valores e filtrar depois.
 O payload do webhook traz `token`; responder pelo mesmo número com `{{ $json.instance.token }}` é o caso
 mais comum. Admin token é opcional na credencial e só habilita o dropdown. Ações destrutivas
 (criar/deletar instância, rotacionar token) ficam fora da v1.
+
+## 2026-10-03 — Disconnect fora da v1
+
+O node `Uazapi` é `usableAsTool`: um AI Agent poderia chamar Disconnect e deslogar o número real, que
+só volta relendo o QR code. Por isso a v1 tem só Get Status e Connect no recurso Instance. Disconnect
+volta, se voltar, com confirmação explícita fora do alcance do AI Agent.
