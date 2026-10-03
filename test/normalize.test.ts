@@ -146,3 +146,10 @@ describe('normalizeMessage — robustness', () => {
 		expect(out.attachment.contato).toEqual([]);
 	});
 });
+
+describe('normalizeMessage — voice note mimetype', () => {
+	it('drops mimetype parameters from the extension', () => {
+		const out = normalizeMessage(body({ messageType: 'AudioMessage', content: { mimetype: 'audio/ogg; codecs=opus' } }));
+		expect(out.attachment).toMatchObject({ mimetype: 'audio/ogg; codecs=opus', extension: 'ogg' });
+	});
+});

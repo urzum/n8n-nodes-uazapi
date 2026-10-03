@@ -1,4 +1,5 @@
 import type {
+	IDataObject,
 	IHookFunctions,
 	INodeType,
 	INodeTypeDescription,
@@ -191,7 +192,8 @@ export class UazapiTrigger implements INodeType {
 		const item = normalizeMessage(body);
 		const media = this.getNodeParameter('media', 'none') as MediaMode;
 		if (media !== 'none' && hasMedia(body)) {
-			const transcribe = this.getNodeParameter('transcribeAudio', false) as boolean;
+			const audio = ['audio', 'ptt', 'myaudio'].includes(String((body.message as IDataObject | undefined)?.mediaType));
+			const transcribe = audio && (this.getNodeParameter('transcribeAudio', false) as boolean);
 			const messageId = String(item.message.message_id);
 			try {
 				const response = await uazapiRequest(

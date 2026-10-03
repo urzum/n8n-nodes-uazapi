@@ -57,3 +57,20 @@ describe('webhook() with media', () => {
 		expect(calls).toHaveLength(0);
 	});
 });
+
+describe('webhook() transcription scope', () => {
+	it('does not ask for a transcription of an image', async () => {
+		const { ctx, calls } = fakeWebhook({ params: params({ media: 'link', transcribeAudio: true }), body: imageInbound as IDataObject, responses: [{ fileURL: 'https://f/x.jpg', transcription: 'ruído' }] });
+		const result = await run(ctx);
+		expect((calls[0].body as IDataObject).transcribe).toBe(false);
+		expect(((result.workflowData?.[0][0].json as IDataObject).message as IDataObject).content).toBe('');
+	});
+
+	it('asks for a transcription of a voice note', async () => {
+		const audio = { ...imageInbound, message: { ...imageInbound.message, mediaType: 'ptt', messageType: 'AudioMessage' } };
+		const { ctx, calls } = fakeWebhook({ params: params({ media: 'link', transcribeAudio: true }), body: audio as IDataObject, responses: [{ fileURL: 'https://f/x.mp3', transcription: 'olá' }] });
+		const result = await run(ctx);
+		expect((calls[0].body as IDataObject).transcribe).toBe(true);
+		expect(((result.workflowData?.[0][0].json as IDataObject).message as IDataObject).content).toBe('olá');
+	});
+});

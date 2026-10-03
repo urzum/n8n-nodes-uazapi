@@ -187,7 +187,7 @@ export function normalizeMessage(body: IDataObject): NormalizedMessage {
 			mimetype,
 			filename: str(content.fileName),
 			fileid: str(content.fileSHA256),
-			extension: mimetype.split('/').pop() ?? '',
+			extension: (mimetype.split(';')[0].split('/').pop() ?? '').trim(),
 			content_url: str(content.URL),
 			file_url: '',
 			base64: '',
