@@ -8,11 +8,11 @@ Spec aprovada (`docs/specs/n8n-nodes-uazapi-spec.md`). Estrutura de agentes mont
 
 ## Em andamento
 
-Plano de implementação (a escrever em docs/specs/).
+Plano escrito, aguardando aprovação do Armando: `docs/specs/n8n-nodes-uazapi-plan.md`.
 
 ## Próximo passo seguro
 
-Escrever o plano e as tasks; scaffold com `@n8n/node-cli` é a primeira task.
+Após aprovação: `node scripts/tasks-to-issues.mjs` e começar pela T1.
 
 ## Bloqueios
 

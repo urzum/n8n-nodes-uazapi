@@ -34,8 +34,9 @@ rotacionar tokens (ações destrutivas com admin token exigem confirmação expl
 ## Pacote
 
 - Nome npm: `@urzum/n8n-nodes-uazapi` (pré-requisito: escopo `@urzum` pertencer ao Armando no npm).
-- Scaffold: `@n8n/node-cli` (`npm create @n8n/node`), estilo **programático** (`execute()`), TypeScript.
+- Scaffold: `@n8n/node-cli` (`n8n-node new --template programmatic/example`), estilo **programático** (`execute()`), TypeScript, `strict: true`.
 - Instalação: n8n self-hosted → Settings → Community Nodes → Install → `@urzum/n8n-nodes-uazapi`.
+- Node `Uazapi` com `usableAsTool: true` (disponível como ferramenta do AI Agent).
 
 ### Peças
 
@@ -138,7 +139,7 @@ Mantém os nomes do Set `normalizacao` atual. Fonte = `body.message` (`msg`), `c
 | `message.message_id` | `msg.messageid` |
 | `message.chat_id` / `message.jid` | `msg.chatid` |
 | `message.pushName` | `msg.senderName` |
-| `message.whatsapp` / `message.sender` | número de `msg.sender_pn` (antes do `@`); se vazio, número de `chatid` quando `@s.whatsapp.net`; senão `msg.sender_lid` |
+| `message.whatsapp` / `message.sender` | número do `chatid` quando termina em `@s.whatsapp.net` (o cliente, também em mensagens `fromMe`); senão, se `!fromMe`, número de `msg.sender_pn`; senão `msg.sender_lid` |
 | `message.lid` | `msg.sender_lid` |
 | `message.origem` | `grupo` se `chatid` contém `@g.`, senão `individual` |
 | `message.content_type` | `msg.messageType` em minúsculas |
@@ -176,9 +177,17 @@ Mantém os nomes do Set `normalizacao` atual. Fonte = `body.message` (`msg`), `c
 - **Manual:** `npm run dev` (n8n local com o pacote) contra a instância real: enviar texto/mídia, receber texto/imagem/áudio, desativar e conferir que o webhook sumiu de `GET /webhook` e o webhook principal ficou intacto.
 - `npm run lint` (regras de community node do n8n) sem erros antes de publicar.
 
+## Interface
+
+Rótulos e descrições da UI em inglês (padrão dos nodes nativos e exigência de capitalização do lint
+`n8n-node lint`). README em português.
+
 ## Publicação
 
-1. Conta npm com escopo `@urzum` (usuário ou org).
-2. `npm run build && npm run lint && npm test`.
-3. `npm publish --access public`.
+Desde 2026-05-01 o n8n exige publicação via GitHub Actions com npm provenance
+(`.github/workflows/publish.yml` do scaffold).
+
+1. Conta npm com escopo `@urzum` e Trusted Publisher configurado (repo `urzum/n8n-nodes-uazapi`, workflow `publish.yml`).
+2. `npm run release` (lint + build + bump + changelog + tag + push) — com aprovação do Armando.
+3. O push da tag dispara `publish.yml`, que publica com provenance.
 4. n8n → Settings → Community Nodes → Install → `@urzum/n8n-nodes-uazapi`.
