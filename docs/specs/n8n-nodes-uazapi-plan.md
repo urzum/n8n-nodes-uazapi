@@ -640,7 +640,7 @@ export const instanceLocator: INodeProperties = {
 			displayName: 'By Token',
 			name: 'token',
 			type: 'string',
-			placeholder: 'e.g. 0af1bafe-02ed-4689-af8f-000000000000',
+			placeholder: 'e.g. 11111111-2222-3333-4444-555555555555',
 		},
 	],
 };
