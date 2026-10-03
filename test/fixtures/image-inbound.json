@@ -1,0 +1,40 @@
+{
+  "BaseUrl": "https://smileia.uazapi.com",
+  "EventType": "messages",
+  "instanceName": "Mestre",
+  "owner": "551151965511",
+  "token": "TOKEN_REDACTED",
+  "message": {
+    "buttonOrListid": "",
+    "chatid": "5511994989615@s.whatsapp.net",
+    "chatlid": "275582348714164@lid",
+    "content": {
+      "URL": "https://mmg.whatsapp.net/o1/v/t24/f2/m232/AQMN5wDW.enc",
+      "mimetype": "image/jpeg",
+      "fileSHA256": "YkXRFpRLH+7mHQPOaVddU4gsI3BmEz8EjTCupKGlhvo=",
+      "fileLength": 165051,
+      "JPEGThumbnail": "/9j/4AAQSkZJRg",
+      "contextInfo": { "statusSourceType": 0 }
+    },
+    "fromMe": false,
+    "groupName": "",
+    "id": "551151965511:3AD93C7D7A45DD37ACA6",
+    "isGroup": false,
+    "mediaType": "image",
+    "messageTimestamp": 1790039087000,
+    "messageType": "ImageMessage",
+    "messageid": "3AD93C7D7A45DD37ACA6",
+    "owner": "551151965511",
+    "quoted": "",
+    "sender": "275582348714164@lid",
+    "senderName": "Armando Urzum",
+    "sender_lid": "275582348714164@lid",
+    "sender_pn": "5511994989615@s.whatsapp.net",
+    "source": "ios",
+    "text": "",
+    "track_id": "",
+    "track_source": "",
+    "type": "media",
+    "wasSentByApi": false
+  }
+}
