@@ -24,6 +24,7 @@ Sem banco, sem tela própria, sem deploy; o produto é o pacote publicado. Toca 
 | Porquê de uma decisão | `MEMORY.md` → `docs/decisoes.md` |
 | Domínio (chatid, LID, track_source, role) | `CONTEXT.md` |
 | O que está aberto | `gh issue list` |
+| Escrever node, credencial ou propriedade | `.agents/nodes.md`, `.agents/properties.md`, `.agents/nodes-programmatic.md`, `.agents/credentials.md` |
 
 ## Acoplamentos invisíveis
 

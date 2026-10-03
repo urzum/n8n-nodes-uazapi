@@ -6,7 +6,7 @@ Ambiente: local (n8n via `npm run dev`); n8n self-hosted do Armando para teste m
 Usuários reais: não
 Dados reais: sim (instância uazapi real nos testes manuais)
 Política de push: direto-no-main
-Política de deploy: aprovação-obrigatória (deploy = `npm publish`)
+Política de deploy: aprovação-obrigatória (deploy = `npm run release` → tag → `.github/workflows/publish.yml` com provenance)
 Risco do banco: não-aplicável
 Política de MCP em produção: não-aplicável
 Provedor do banco: não-aplicável
@@ -38,7 +38,7 @@ Pacote npm `@urzum/n8n-nodes-uazapi` (público). Instalação: n8n → Settings 
 
 ## Pergunte antes
 
-- `npm publish` (qualquer versão).
+- `npm run release` ou push de tag de versão (publica no npm).
 - Teste manual que envia mensagem para número que não seja o de teste.
 - Criar, deletar ou desconectar instância real.
 
